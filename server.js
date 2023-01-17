@@ -16,8 +16,13 @@ const users = [
   { id: 10, name: "user10" },
 ];
 
-app.get("/", (req, res) => {
-  res.json(users);
+app.get("/users", (req, res) => {
+  const page = req.query.page;
+  const limit = req.query.limit;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+  const result = users.slice(startIndex, endIndex);
+  res.json(result);
 });
 
 app.listen(6060, () => {
