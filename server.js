@@ -17,11 +17,26 @@ const users = [
 ];
 
 app.get("/users", (req, res) => {
-  const page = req.query.page;
-  const limit = req.query.limit;
+  const result = {};
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
-  const result = users.slice(startIndex, endIndex);
+  // to create the next page
+  if (endIndex < users.length) {
+    result.next = {
+      page: page + 1,
+      limit: limit,
+    };
+  }
+  // to create previous page
+  if (startIndex > 0) {
+    result.previous = {
+      page: page - 1,
+      limit: limit,
+    };
+  }
+  result.results = users.slice(startIndex, endIndex);
   res.json(result);
 });
 
