@@ -1,5 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
+require("dotenv").config();
+
+const mongo_url = process.env.MONGODB_URI;
+const PORT = process.env.PORT || 6060;
 
 const app = express();
 
@@ -16,7 +20,7 @@ const users = [
   { id: 10, name: "user10" },
 ];
 
-app.get("/users", (req, res) => {
+app.get("/users", paginate(users), (req, res) => {
   res.json(res.paginatedResult);
 
   //   const result = {};
@@ -43,12 +47,12 @@ app.get("/users", (req, res) => {
   //   res.json(result);
 });
 
-app.get("/posts", paginate(posts), (req, res) => {
-  res.json(res.paginatedResult);
-});
+// app.get("/posts", paginate(posts), (req, res) => {
+//   res.json(res.paginatedResult);
+// });
 
-app.listen(6060, () => {
-  console.log("App is running on port 6060");
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
 });
 
 /**
