@@ -17,29 +17,71 @@ const users = [
 ];
 
 app.get("/users", (req, res) => {
-  const result = {};
-  const page = parseInt(req.query.page);
-  const limit = parseInt(req.query.limit);
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
-  // to create the next page
-  if (endIndex < users.length) {
-    result.next = {
-      page: page + 1,
-      limit: limit,
-    };
-  }
-  // to create previous page
-  if (startIndex > 0) {
-    result.previous = {
-      page: page - 1,
-      limit: limit,
-    };
-  }
-  result.results = users.slice(startIndex, endIndex);
-  res.json(result);
+  res.json(res.paginatedResult);
+
+  //   const result = {};
+  //   const page = parseInt(req.query.page);
+  //   const limit = parseInt(req.query.limit);
+  //   const startIndex = (page - 1) * limit;
+  //   const endIndex = page * limit;
+  //   // to create the next page
+  //   if (endIndex < users.length) {
+  //     result.next = {
+  //       page: page + 1,
+  //       limit: limit,
+  //     };
+  //   }
+  //   // to create previous page
+  //   if (startIndex > 0) {
+  //     result.previous = {
+  //       page: page - 1,
+  //       limit: limit,
+  //     };
+  //   }
+  //   // add results to result
+  //   result.results = users.slice(startIndex, endIndex);
+  //   res.json(result);
+});
+
+app.get("/posts", paginate(posts), (req, res) => {
+  res.json(res.paginatedResult);
 });
 
 app.listen(6060, () => {
   console.log("App is running on port 6060");
 });
+
+/**
+ * @input: model
+ * @output:
+ */
+
+function paginate(model) {
+  return (req, res, next) => {
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+    const result = {};
+
+    // to create the next page
+    if (endIndex < model.length) {
+      result.next = {
+        page: page + 1,
+        limit: limit,
+      };
+    }
+    // to create previous page
+    if (startIndex > 0) {
+      result.previous = {
+        page: page - 1,
+        limit: limit,
+      };
+    }
+    // add results to result
+    result.results = model.slice(startIndex, endIndex);
+    res.paginatedResult = result;
+    next();
+  };
+}
