@@ -45,18 +45,6 @@ db.once("open", async () => {
     );
 });
 
-app.get("/users", paginate(User), (req, res) => {
-  res.json(res.paginatedResult);
-});
-
-// app.get("/posts", paginate(posts), (req, res) => {
-//   res.json(res.paginatedResult);
-// });
-
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
-
 // Helper function perform pagination
 // INPUT: model
 // OUTPUT: returns result of pagination
@@ -92,3 +80,16 @@ function paginate(model) {
     }
   };
 }
+
+// GET all the users
+app.get("/users", paginate(User), (req, res) => {
+  res.json(res.paginatedResult);
+});
+
+// app.get("/posts", paginate(posts), (req, res) => {
+//   res.json(res.paginatedResult);
+// });
+
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});
